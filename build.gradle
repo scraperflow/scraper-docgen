@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+group = 'scraper.docgen'
+version = '0.11.0'
+sourceCompatibility = '1.11'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.+'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.+'
+
+    compile group: 'com.github.javaparser', name:'javaparser-core', version: '3.0.0'
+    compile 'com.j2html:j2html:1.4.0'
+}
+
+task bundleFatJar(type: Jar) { t ->
+    manifest { attributes 'Main-Class': 'scraper.doclet.ScraperDocgen' }
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+    from {
+        sourceSets.main.output
+    }
+
+    archiveFileName = "Scraper-docgen-${version}.jar"
+    destinationDirectory = file("$rootDir/build/libs")
+}

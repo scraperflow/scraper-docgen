@@ -1,0 +1,137 @@
+body {
+    font-family: "Lato", sans-serif;
+    background: #1111111c;
+}
+
+pre {
+    font-size: 13px;
+}
+
+var {
+    border: 1px solid black;
+    padding: 2px 4px;
+    font-weight: bold;
+    font-style: initial;
+}
+
+.field {
+    padding: 5px;
+}
+
+.fieldDoc {
+    margin: 5px;
+    background: #307d1530;
+    padding-top: 7px;
+    padding-left: 14px;
+    padding-bottom: 7px;
+}
+
+.defaultValue {
+    font-family: monospace;
+    padding-left: 10px;
+    color: #825401;
+    font-size: 14px;
+}
+
+.tag {
+    display:inline-block;
+    padding-left:8px;
+    padding-right:8px;
+    text-align:center;
+    margin: 6px 2px 2px;
+}
+
+.optional {
+    background-color: #69c449;
+}
+
+.mandatory {
+    background-color: #ff8245;
+}
+
+.argument {
+    background-color: #aaa4f2;
+}
+
+.fieldName {
+    font-weight: bold;
+    border: 2px solid gray;
+    text-align: center;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 1px;
+}
+
+.version {
+    border: 2px solid gray;
+    text-align: center;
+    padding-right: 5px;
+    font-size: 16px;
+    position: absolute;
+    right: 32px;
+    padding-left: 5px;
+}
+
+.sidenav {
+    height: 100%;
+    width: 350px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    font-size: 18px;
+    color: #818181;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+
+.lambda {
+    color: orangered;
+    border: 1px solid
+    red;
+    padding: 3px 4px 1px 5px;
+}
+
+.stream {
+    color: #00b7ff;
+    border: 1px solid #00b7ff;
+    padding: 3px 4px 1px 5px;
+}
+
+.flow {
+    margin-left: 4px;
+    color: whitesmoke;
+    border: 1px solid whitesmoke;
+    padding: 3px 4px 1px 5px;
+}
+
+.io {
+    margin-left: 4px;
+    color: #e3a52e;
+    border: 1px solid #e3a52e;
+    padding: 3px 4px 1px 5px;
+}
+
+.stateful {
+    margin-left: 4px;
+    color: #ee21ff;
+    border: 1px solid #ee21ff;
+    padding: 3px 4px 1px 5px;
+}
+
+.main {
+    margin-left: 350px; /* Same as the width of the sidenav */
+    font-size: 18px; /* Increased text to enable scrolling */
+    padding: 0 10px;
+}
