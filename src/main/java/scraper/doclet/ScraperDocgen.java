@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class ScraperDocgen {
     static Map<String, Object> docs = new HashMap<>();
+    static Set<String> filter = new HashSet<>();
+
     public static void main(String[] args) {
         if(args.length < 2) throw new IllegalArgumentException("First argument output file, following arguments folder paths to include");
 
@@ -36,11 +38,12 @@ public class ScraperDocgen {
 
                         // empty javadoc node: return
                         Optional<Node> nod = comment.getCommentedNode();
-                        if (nod.isEmpty()) return;
+                        if (nod.isEmpty()) {
+                            return;
+                        }
 
                         Node nodd = nod.get();
                         Map nodeDoc = (Map) docs.getOrDefault(nname, new HashMap<>());
-                        docs.put(nname, nodeDoc);
                         List fields = (List) nodeDoc.getOrDefault("fields", new LinkedList<>());
                         nodeDoc.put("fields", fields);
 
@@ -78,12 +81,23 @@ public class ScraperDocgen {
 
                             // version
                             Optional<AnnotationExpr> annotOpt = ((ClassOrInterfaceDeclaration) nodd).getAnnotationByName("NodePlugin");
-                            if(annotOpt.isEmpty()) return;
+                            if(annotOpt.isEmpty()) {
+                                filter.add(nname);
+                                return;
+                            }
                             AnnotationExpr annot = annotOpt.get();
                             String version;
                             if(annot instanceof SingleMemberAnnotationExpr) {
                                 version = ((SingleMemberAnnotationExpr) annot).getMemberValue().toString();
                             } else {
+                                Optional<MemberValuePair> deprecated = ((NormalAnnotationExpr) annot).getPairs().stream()
+                                        .filter(p -> p.getName().getId().equals("deprecated"))
+                                        .findFirst();
+                                if (deprecated.isPresent() && deprecated.get().getValue().toString().equalsIgnoreCase("true")) {
+                                    filter.add(nname);
+                                    return;
+                                }
+
                                 Optional<MemberValuePair> defaultVal = ((NormalAnnotationExpr) annot).getPairs().stream()
                                         .filter(p -> p.getName().getId().equals("value"))
                                         .findFirst();
@@ -136,6 +150,8 @@ public class ScraperDocgen {
                             }
                             fields.add(fieldDoc);
                         }
+
+                        docs.put(nname, nodeDoc);
                     }
 
                 }.visit(JavaParser.parse(file), null);
@@ -154,6 +170,8 @@ public class ScraperDocgen {
                     path.endsWith(".java") && !path.contains("module-info") && path.contains("Node"),
                     handleNode).explore(projectDir);
         }
+
+        filter.forEach(v -> docs.remove(v));
 
         HtmlGenerator.main(output);
     }

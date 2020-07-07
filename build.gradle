@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'scraper.docgen'
-version = '0.11.0'
+version = '0.11.1'
 sourceCompatibility = '1.11'
 
 repositories {
