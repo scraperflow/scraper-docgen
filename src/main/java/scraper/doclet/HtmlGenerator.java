@@ -2,6 +2,7 @@ package scraper.doclet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import j2html.attributes.Attr;
 import j2html.tags.ContainerTag;
 
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ public class HtmlGenerator {
                 ),
                 body(
                         div(sideFilter()).withClasses("sidefilter"),
+                        div(sideTextFilter()).withClasses("sidetextfilter"),
                         div(sideNav()).withClasses("sidenav"),
                         div().withId("main").withClasses("main"),
                         script( rawHtml("map = " + str) )
@@ -49,6 +51,7 @@ public class HtmlGenerator {
         }
 
     }
+
     private static ContainerTag[] sideFilter() {
         Function<String, String> filter = f -> rawHtml("onclick=\"filterNodes('" + f + "')\"").render();
         return List.of(
@@ -58,6 +61,13 @@ public class HtmlGenerator {
                 span("Ŝ").withClasses("stateful", "filter-btn").attr(filter.apply("stateful")),
                 span("IO").withClasses("io", "filter-btn").attr(filter.apply("io")),
                 span("λ").withClasses("lambda", "filter-btn").attr(filter.apply("lambda"))
+        ).toArray(new ContainerTag[0]);
+    }
+
+    private static ContainerTag[] sideTextFilter() {
+//        Function<String, String> filter = f -> rawHtml("onclick=\"filterNodes('" + f + "')\"").render();
+        return List.of(
+                div(input().withPlaceholder("Name...").withClass("filter-area"))
         ).toArray(new ContainerTag[0]);
     }
 

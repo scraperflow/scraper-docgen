@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     showInitial()
 
+    const selectElement = document.querySelector('input');
+    selectElement.addEventListener('input', function (evt) {
+        filterNodesByText(this.value);
+    });
+
+    filterNodesByText(selectElement.value)
+
 }, false);
 
 showFilter = {lambda: true, io: true, stateful: true, flow: true, stream: true}
@@ -158,7 +165,6 @@ function showInitial() {
         let nodes = document.getElementsByClassName(cat);
         for (let j = 0; j < nodes.length; j++) {
             let node = nodes[j];
-            console.log("Add")
             node.parentNode.classList.add("show-initial-"+cat)
         }
     }
@@ -178,5 +184,18 @@ function filterNode(category, node) {
             node.classList.remove("show-"+category)
         }
     }
+}
 
+function filterNodesByText(name) {
+    let nodes = document.getElementsByClassName('node-list');
+    for (let i = 0; i < nodes.length; i++) {
+        let node = nodes[i]
+        let els = node.querySelectorAll("a");
+
+        if(!els[0].text.toLowerCase().includes(name.toLowerCase())) {
+            node.classList.add("hide")
+        } else {
+            node.classList.remove("hide")
+        }
+    }
 }

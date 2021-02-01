@@ -84,12 +84,32 @@ var {
     overflow-x: hidden;
 }
 
-.sidenav {
+input {
+    width: 100%;
+}
+
+.sidetextfilter {
+    height: 40px;
     width: 350px;
     position: fixed;
     z-index: 1;
     top: 36px;
-    bottom: 0px;
+    left: 0;
+    padding-top: 2px;
+    background-color: #393535;
+    overflow-x: hidden;
+}
+
+.sidetextfilter > div {
+    padding: 3px;
+}
+
+.sidenav {
+    width: 350px;
+    position: fixed;
+    z-index: 1;
+    top: 78px;
+    bottom: 0;
     left: 0;
     background-color: #111;
     overflow-x: hidden;
@@ -100,6 +120,7 @@ var {
     background: #2f71d9;
     cursor: pointer;
 }
+
 
 .hide-io { display: none; }
 .hide-lambda { display: none; }
@@ -119,6 +140,7 @@ var {
 .show-initial-flow { display: inherit !important; }
 .show-initial-stream { display: inherit !important; }
 
+.hide { display: none !important; }
 
 .hide-btn {
     opacity: 0.4;
