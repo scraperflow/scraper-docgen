@@ -10,4 +10,4 @@ The documentation for the current released Scraper bundle can be found here:
 
 https://docs.scraper.server1.link
 
-![image](https://user-images.githubusercontent.com/38429047/76738504-10d86480-676b-11ea-8a87-7938d72ec3f5.png)
+![image](https://user-images.githubusercontent.com/38429047/106506609-da5e2200-64c1-11eb-958b-48d59c934e27.png)
