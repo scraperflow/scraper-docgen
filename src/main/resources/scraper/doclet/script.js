@@ -57,8 +57,18 @@ function showDoc(e) {
     doc.innerHTML = node["doc"]["txt"];
     document.getElementById('main').appendChild(doc);
 
-    document.getElementById('main').appendChild(document.createElement('hr'));
 
+
+    document.getElementById('main').appendChild(document.createElement('hr'));
+    let template = document.createElement('h4');
+    template.innerHTML = "Template";
+    let templatePre = document.createElement('pre');
+    if(e !== "Node" && e !== "FunctionalNode" && e !== "StreamNode") templatePre.innerText = "type: " + e + "\n";
+    template.appendChild(templatePre);
+    document.getElementById('main').appendChild(template);
+
+
+    document.getElementById('main').appendChild(document.createElement('hr'));
     let fields = document.createElement('h4');
     fields.innerHTML = "Configuration";
     document.getElementById('main').appendChild(fields);
@@ -67,13 +77,22 @@ function showDoc(e) {
     let fieldsDiv = document.createElement('div');
     fieldsDiv.id = 'fields';
     document.getElementById('main').appendChild(fieldsDiv);
-    addFields(node);
+
+
+    addFields(node, templatePre);
 
     window.location.hash = e;
 }
 
-function addFields(node) {
+function addFields(node, templatePre) {
+
+
     for (let i = 0; i < node['fields'].length; i++) {
+        let isMandatory = false;
+        let defaultValue = null;
+        let fieldName;
+
+
         let field = document.createElement('div');
         field.classList.add('field');
 
@@ -82,6 +101,7 @@ function addFields(node) {
             name.innerHTML = node['fields'][i]['name'];
             name.classList.add('fieldName');
             field.appendChild(name);
+            fieldName = node['fields'][i]['name'];
         }
         {
             let defaultVal = document.createElement('span');
@@ -89,6 +109,7 @@ function addFields(node) {
                 defaultVal.innerHTML = node['fields'][i]['defaultValue'];
                 defaultVal.classList.add('defaultValue');
                 field.appendChild(defaultVal);
+                defaultValue = node['fields'][i]['defaultValue'];
             }
 
         }
@@ -110,6 +131,7 @@ function addFields(node) {
                 if(mandatory === 'true') {
                     tag.classList.add('mandatory');
                     tag.innerHTML = 'mandatory';
+                    isMandatory = true;
                 } else {
                     tag.classList.add('optional');
                     tag.innerHTML = 'optional';
@@ -141,6 +163,18 @@ function addFields(node) {
         }
 
         document.getElementById('fields').appendChild(field);
+
+
+        // create template pre text
+        if(fieldName !== "type") {
+            templatePre.innerText = templatePre.innerText
+                + (isMandatory?"":"#")
+                + fieldName +": "
+                + (defaultValue !== null ? defaultValue : "")
+                + "\n"
+            ;
+        }
+
     }
 
 }
