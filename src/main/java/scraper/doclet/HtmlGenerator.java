@@ -65,7 +65,6 @@ public class HtmlGenerator {
     }
 
     private static ContainerTag[] sideTextFilter() {
-//        Function<String, String> filter = f -> rawHtml("onclick=\"filterNodes('" + f + "')\"").render();
         return List.of(
                 div(input().withPlaceholder("Name...").withClass("filter-area"))
         ).toArray(new ContainerTag[0]);
