@@ -1,6 +1,6 @@
 # scraper-docgen - Documentation generator for node configurations
 
-![version](https://img.shields.io/badge/version-0.11.1-green.svg)
+![version](https://img.shields.io/badge/version-0.12.0-green.svg)
 
 First argument is the path to the generated output HTML file, following arguments is the path to the folders to search for nodes.
 

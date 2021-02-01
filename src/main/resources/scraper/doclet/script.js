@@ -3,7 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
         showDoc(window.location.hash.substr(1));
     }
 
+    showInitial()
+
 }, false);
+
+showFilter = {lambda: true, io: true, stateful: true, flow: true, stream: true}
 
 window.onhashchange = function change(h) {
     showDoc(window.location.hash.substr(1));
@@ -20,7 +24,11 @@ function showDoc(e) {
         for (let i = 0; i < node['extends'].length; i++) {
             {
                 let link = document.createElement('a');
-                link.href = '#' + node['extends'][i];
+                nodename = node['extends'][i];
+                // remove Node from link
+                if (nodename === "Node" || nodename === "StreamNode" || nodename === "FunctionalNode") { link.href = '#' + node['extends'][i] }
+                else { link.href = '#' + nodename.slice(0, -4) }
+
                 link.innerText = node['extends'][i];
                 extendedNodes.appendChild(link);
                 let space = document.createElement('span');
@@ -126,6 +134,49 @@ function addFields(node) {
         }
 
         document.getElementById('fields').appendChild(field);
+    }
+
+}
+
+function filterNodes(category) {
+    showFilter[category] = !showFilter[category];
+
+    let nodes = document.getElementsByClassName('node-list');
+    for (let i = 0; i < nodes.length; i++) {
+        filterNode(category, nodes[i])
+    }
+
+    let button = document.getElementsByClassName('sidefilter')[0].getElementsByClassName(category)[0];
+    if(showFilter[category]) { button.classList.remove("hide-btn") }
+    else { button.classList.add("hide-btn") }
+}
+
+function showInitial() {
+    let cats = ["lambda", "stream", "stateful", "flow", "io"]
+    for (let i = 0; i < cats.length; i++) {
+        let cat = cats[i];
+        let nodes = document.getElementsByClassName(cat);
+        for (let j = 0; j < nodes.length; j++) {
+            let node = nodes[j];
+            console.log("Add")
+            node.parentNode.classList.add("show-initial-"+cat)
+        }
+    }
+}
+
+function filterNode(category, node) {
+    node.classList.remove("show-initial-"+category)
+
+    let matching = node.getElementsByClassName(category).length > 0;
+    if (matching) {
+        if(showFilter[category]) {
+            node.classList.remove("hide-"+category)
+            node.classList.add("show-"+category)
+        }
+        else {
+            node.classList.add("hide-"+category)
+            node.classList.remove("show-"+category)
+        }
     }
 
 }

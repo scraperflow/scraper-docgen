@@ -33,6 +33,9 @@ public class ScraperDocgen {
 
                         String nname = file.getName().substring(0, file.getName().length()-5);
 
+                        // TODO technical debt
+                        if(nname.equals("FunctionalNode") || nname.equals("StreamNode")) return;
+
                         // replace Abstract
                         nname = nname.replaceAll("Abstract", "");
 
@@ -167,7 +170,7 @@ public class ScraperDocgen {
         for (String inputPath : inputPaths) {
             File projectDir = new File(inputPath);
             new DirExplorer((level, path, file) ->
-                    path.endsWith(".java") && !path.contains("module-info") && path.contains("Node"),
+                    path.endsWith(".java") && !path.contains("module-info"),
                     handleNode).explore(projectDir);
         }
 

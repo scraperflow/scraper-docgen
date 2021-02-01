@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,7 +26,7 @@ public class HtmlGenerator {
         } catch (JsonProcessingException e) {
             throw new RuntimeException();
         }
-        String htmlStr = html(
+                String htmlStr = html(
                 head(
                         meta().withName("viewport").withContent("width=device-width, initial-scale=1, shrink-to-fit=no"),
                         meta().withTitle("Node Documentation"),
@@ -33,6 +35,7 @@ public class HtmlGenerator {
                         scriptWithInlineFile("/scraper/doclet/script.js")
                 ),
                 body(
+                        div(sideFilter()).withClasses("sidefilter"),
                         div(sideNav()).withClasses("sidenav"),
                         div().withId("main").withClasses("main"),
                         script( rawHtml("map = " + str) )
@@ -45,6 +48,17 @@ public class HtmlGenerator {
             e.printStackTrace();
         }
 
+    }
+    private static ContainerTag[] sideFilter() {
+        Function<String, String> filter = f -> rawHtml("onclick=\"filterNodes('" + f + "')\"").render();
+        return List.of(
+                span("Filter").withClasses("filter-text"),
+                span("≫").withClasses("stream", "filter-btn").attr(filter.apply("stream")),
+                span("⇒").withClasses("flow", "filter-btn").attr(filter.apply("flow")),
+                span("Ŝ").withClasses("stateful", "filter-btn").attr(filter.apply("stateful")),
+                span("IO").withClasses("io", "filter-btn").attr(filter.apply("io")),
+                span("λ").withClasses("lambda", "filter-btn").attr(filter.apply("lambda"))
+        ).toArray(new ContainerTag[0]);
     }
 
     private static ContainerTag[] sideNav() {
@@ -72,7 +86,7 @@ public class HtmlGenerator {
                                                 span("Ŝ").withClasses("stateful") :
                                                 span(),
                                         ((String) ((Map) ScraperDocgen.docs.getOrDefault(o, Map.of())).getOrDefault("io", "false")).equalsIgnoreCase("true") ?
-                                                span("I/O").withClasses("io") :
+                                                span("IO").withClasses("io") :
                                                 span()
                                 )
                         ),
@@ -91,7 +105,7 @@ public class HtmlGenerator {
                                                 span("Ŝ").withClasses("stateful") :
                                                 span(),
                                         ((String) ((Map) ScraperDocgen.docs.getOrDefault(o, Map.of())).getOrDefault("io", "false")).equalsIgnoreCase("true") ?
-                                                span("I/O").withClasses("io") :
+                                                span("IO").withClasses("io") :
                                                 span()
                                 )
                         )
@@ -103,9 +117,11 @@ public class HtmlGenerator {
                         .stream()
                         .sorted()
                         .filter(p ->
-                                p.endsWith("Node") &&
                                 !((List) ((Map) ScraperDocgen.docs.getOrDefault(p, Map.of())).getOrDefault("extends", List.of())).contains("StreamNode") &&
                                         !((List) ((Map) ScraperDocgen.docs.getOrDefault(p, Map.of())).getOrDefault("extends", List.of())).contains("FunctionalNode")
+                        )
+                        .filter(p ->
+                                !((List) ((Map) ScraperDocgen.docs.getOrDefault(p, Map.of())).getOrDefault("fields", List.of())).isEmpty()
                         )
                         .map(o -> div(
                                 a(o).attr(rawHtml("onclick=\"showDoc('" + o + "')\"").render()),
@@ -116,12 +132,13 @@ public class HtmlGenerator {
                                         span("Ŝ").withClasses("stateful") :
                                         span(),
                                 ((String) ((Map) ScraperDocgen.docs.getOrDefault(o, Map.of())).getOrDefault("io", "false")).equalsIgnoreCase("true") ?
-                                        span("I/O").withClasses("io") :
+                                        span("IO").withClasses("io") :
                                         span()
                         ))
         );
 
         return allNodes
+                .map(c -> c.withClass("node-list"))
                 .collect(Collectors.toList())
                 .toArray(ContainerTag[]::new);
     }
